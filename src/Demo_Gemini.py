@@ -50,6 +50,13 @@ class User:
         }
     
     def save_to_file(self, file_name = "data/user_data.json"):
+        folder = os.path.dirname(file_name)
+
+        # neu duong dan co chua thu muc khong ton tai thi tao moi
+        if folder and not os.path.exists(folder):
+            os.makedirs(folder)
+            print(f"[System] Đã tạo thư mục {folder} để lưu dữ liệu người dùng.")
+        
         data = self.to_dict()
         with open(file_name,"w",encoding = "utf-8") as f:
             json.dump(data, f, ensure_ascii= False,indent=4)
@@ -71,7 +78,7 @@ class User:
             return user
         except  (FileNotFoundError, json.JSONDecodeError, ValueError):
             user = User("Khách",1)
-            user.save_to_file("user_data.json")
+            user.save_to_file("data/user_data.json")
             return user
 
 
@@ -222,8 +229,8 @@ class Admin(User):
         print("[ADMIN ALERT] Đang tiến hành xóa toàn bộ dữ liệu hệ thống ... ")
 
         try:
-            if os.path.exists("user_data.json"):
-                os.remove("user_data.json")
+            if os.path.exists("data/user_data.json"):
+                os.remove("data/user_data.json")
                 return f"Đã xóa sạch dữ liệu của user trên bộ nhớ và hệ thống"
 
             else:
@@ -232,7 +239,7 @@ class Admin(User):
         except Exception as e:
             return f"Lỗi khi xóa: {e}"
 
-    def save_to_file(self, file_name="user_data.json"):
+    def save_to_file(self, file_name="data/user_data.json"):
         print(f"[System] Đã đăng xuất")
 
 bot = Chatbot("Jarvis")
